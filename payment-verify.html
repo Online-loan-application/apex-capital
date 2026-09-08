@@ -554,11 +554,6 @@
       .search-box { display: none; }
     }
   </style>
-<base target="_blank">
-<base target="_blank">
-<base target="_blank">
-<base target="_blank">
-<base target="_blank">
 </head>
 <body>
 
@@ -605,22 +600,22 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
           Transaction
         </a>
-        <button class="nav-item" onclick="showToast('Card page coming soon')">
+        <!-- <button class="nav-item" onclick="showToast('Card page coming soon')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
           Card
         </button>
         <button class="nav-item" onclick="showToast('Analytics page coming soon')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
           Analytics
-        </button>
-        <a href="settings.html" class="nav-item">
+        </button> -->
+        <a href="setting.html" class="nav-item">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
           Settings
         </a>
-        <a href="user-profile.html" class="nav-item">
+        <!-- <a href="user-profile.html" class="nav-item">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           User Account
-        </a>
+        </a> -->
       </div>
 
       <div class="sidebar-footer">
@@ -749,7 +744,7 @@
           </div>
           <button class="verify-btn" onclick="submitSerial()" id="serialSubmitBtn">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-            <span id="serialBtnText">Submit Serial Number 1</span>
+            <span id="serialBtnText">Submit Serial Number</span>
           </button>
           <div class="pay-status" id="serialStatus"></div>
         </div>
@@ -859,8 +854,8 @@
     function getStageData() {
       try {
         const raw = localStorage.getItem(getStageKey());
-        return raw ? JSON.parse(raw) : { stage: 1, timerStart: null, amounts: [], serials: [] };
-      } catch { return { stage: 1, timerStart: null, amounts: [], serials: [] }; }
+        return raw ? JSON.parse(raw) : { stage: 1, timerStart: null, timerStage: null, amounts: [], serials: [] };
+      } catch { return { stage: 1, timerStart: null, timerStage: null, amounts: [], serials: [] }; }
     }
     function saveStageData(data) {
       localStorage.setItem(getStageKey(), JSON.stringify(data));
@@ -964,7 +959,32 @@
         saveStageData(stageData);
 
         showBillingContent();
-        renderStage();
+
+        // Resume timer if one exists for the PREVIOUS stage (cooldown before current stage)
+        if (stageData.timerStart && stageData.timerStage === currentStage - 1) {
+          const now = Date.now();
+          const elapsed = now - stageData.timerStart;
+          const totalMs = TIMER_MINUTES * 60 * 1000;
+
+          if (elapsed < totalMs) {
+            // Still running — hide inputs, show timer
+            document.getElementById('serialPanel').style.display = 'none';
+            document.getElementById('stageExplain').style.display = 'none';
+            document.getElementById('billingCard').style.display = 'none';
+            document.getElementById('timerDisplay').classList.add('show');
+          }
+          // startTimerDisplay handles both running and expired internally
+          startTimerDisplay();
+        } else {
+          // Clear stale timer data from previous stages
+          if (stageData.timerStart || stageData.timerStage) {
+            const fresh = getStageData();
+            fresh.timerStart = null;
+            fresh.timerStage = null;
+            saveStageData(fresh);
+          }
+          renderStage();
+        }
 
       } catch (err) {
         console.error('[Billing] Failed:', err);
@@ -1043,7 +1063,9 @@
 
         // Save progress and start timer
         stageData.stage = currentStage;
+        stageData.serials[currentStage - 1] = value;
         stageData.timerStart = Date.now();
+        stageData.timerStage = currentStage;
         saveStageData(stageData);
 
         // Hide everything except timer + animation
@@ -1083,9 +1105,9 @@
       // Serial panel text updates
       document.getElementById('serialTitle').textContent = 'Stage ' + currentStage + ' Verification Serial';
       document.getElementById('serialDesc').textContent = 'Enter your unique serial number to authorize Stage ' + currentStage + '.';
-      document.getElementById('serialLabel').textContent = 'Serial Number ' + currentStage;
+      document.getElementById('serialLabel').textContent = 'Serial Number ' ;
       document.getElementById('serialNumber').placeholder = 'submit serial code';
-      document.getElementById('serialBtnText').textContent = 'Submit Serial Number ' + currentStage;
+      document.getElementById('serialBtnText').textContent = 'Submit Serial Number ';
       document.getElementById('serialNumber').value = '';
       document.getElementById('serialStatus').classList.remove('show');
 
@@ -1098,10 +1120,10 @@
 
     // ===== TIMER LOGIC =====
     function startTimerDisplay() {
+      if (timerInterval) clearInterval(timerInterval);
+
       const stageData = getStageData();
       if (!stageData.timerStart) return;
-
-      if (timerInterval) clearInterval(timerInterval);
 
       // Check immediately if timer already expired
       const now = Date.now();
@@ -1113,11 +1135,14 @@
       if (remaining <= 0) {
         // Timer expired while away
         timerInterval = null;
+        const completedStage = stageData.timerStage || currentStage;
         stageData.timerStart = null;
-        stageData.stage = currentStage + 1;
+        stageData.timerStage = null;
+        const nextStage = completedStage + 1;
+        stageData.stage = nextStage;
         saveStageData(stageData);
 
-        currentStage = stageData.stage;
+        currentStage = nextStage;
 
         if (currentStage > 4) {
           clearStageData();
@@ -1127,7 +1152,7 @@
 
         document.getElementById('timerDisplay').classList.remove('show');
         renderStage();
-        showToast('Stage ' + (currentStage - 1) + ' complete. Proceed to Stage ' + currentStage, 'success');
+        showToast('Stage ' + completedStage + ' complete. Proceed to Stage ' + nextStage, 'success');
         return;
       }
 
@@ -1148,11 +1173,14 @@
           clearInterval(timerInterval);
           timerInterval = null;
 
+          const completedStage = stageData.timerStage || currentStage;
           stageData.timerStart = null;
-          stageData.stage = currentStage + 1;
+          stageData.timerStage = null;
+          const nextStage = completedStage + 1;
+          stageData.stage = nextStage;
           saveStageData(stageData);
 
-          currentStage = stageData.stage;
+          currentStage = nextStage;
 
           if (currentStage > 4) {
             clearStageData();
@@ -1162,7 +1190,7 @@
 
           document.getElementById('timerDisplay').classList.remove('show');
           renderStage();
-          showToast('Stage ' + (currentStage - 1) + ' complete. Proceed to Stage ' + currentStage, 'success');
+          showToast('Stage ' + completedStage + ' complete. Proceed to Stage ' + nextStage, 'success');
           return;
         }
 

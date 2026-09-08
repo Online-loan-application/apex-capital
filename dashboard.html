@@ -16,7 +16,6 @@
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
       background: var(--deep); color: #fff; overflow-x: hidden; line-height: 1.6;
     }
-
     /* Auth gate */
     .auth-gate {
       position: fixed; inset: 0; z-index: 99999;
@@ -337,6 +336,7 @@
       background-size: 200% 100%;
       animation: shimmerLine 3s linear infinite;
     }
+    
     @keyframes floatClock {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-6px); }
@@ -442,6 +442,11 @@
     .stat-value { font-size: 36px; font-weight: 600; letter-spacing: -1px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
     .stat-value .grad {
       background: linear-gradient(135deg, #fff, var(--ice));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    /* WARNING color for pending balance */
+    .stat-value .warning {
+      background: linear-gradient(135deg, #f39c12, #e67e22);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     }
     .balance-active {
@@ -557,7 +562,7 @@
     }
     .quick-btn-icon svg { width: 22px; height: 22px; color: var(--deep); }
 
-    /* Empty Transaction Glass Card */
+    /* Recent Transactions Glass Panel */
     .tx-glass-panel {
       padding: 28px; border-radius: 24px;
       background: linear-gradient(160deg, rgba(193,232,255,0.05), rgba(84,131,179,0.02));
@@ -569,7 +574,7 @@
       opacity: 0;
     }
     .tx-glass-header {
-      display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;
     }
     .tx-glass-title {
       font-size: 18px; font-weight: 600;
@@ -583,6 +588,46 @@
       display: inline-flex; align-items: center; gap: 4px; transition: gap 0.3s;
     }
     .tx-glass-action:hover { gap: 8px; }
+
+    /* Recent tx row (compact for dashboard) */
+    .recent-tx-row {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 16px; border-radius: 16px;
+      background: linear-gradient(160deg, rgba(193,232,255,0.04), rgba(84,131,179,0.02));
+      border: 1px solid rgba(193,232,255,0.06);
+      margin-bottom: 8px;
+      transition: all 0.25s ease; cursor: pointer;
+    }
+    .recent-tx-row:hover {
+      background: linear-gradient(160deg, rgba(193,232,255,0.08), rgba(84,131,179,0.04));
+      border-color: rgba(193,232,255,0.12);
+      transform: translateX(4px);
+    }
+    .recent-tx-icon {
+      width: 40px; height: 40px; border-radius: 12px;
+      display: grid; place-items: center; flex-shrink: 0;
+      font-size: 16px; font-weight: 700;
+    }
+    .recent-tx-icon.credit { background: linear-gradient(135deg, rgba(46,204,113,0.15), rgba(39,174,96,0.08)); color: #2ecc71; }
+    .recent-tx-icon.debit { background: linear-gradient(135deg, rgba(231,76,60,0.15), rgba(192,57,43,0.08)); color: #e74c3c; }
+    .recent-tx-icon.pending { background: linear-gradient(135deg, rgba(243,156,18,0.15), rgba(230,126,34,0.08)); color: #f39c12; }
+    .recent-tx-details { flex: 1; min-width: 0; }
+    .recent-tx-title { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .recent-tx-meta { font-size: 12px; color: var(--slate); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .recent-tx-status {
+      font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
+      padding: 2px 8px; border-radius: 6px;
+    }
+    .recent-tx-status.completed { background: rgba(46,204,113,0.12); color: #2ecc71; }
+    .recent-tx-status.pending { background: rgba(243,156,18,0.12); color: #f39c12; }
+    .recent-tx-status.failed { background: rgba(231,76,60,0.12); color: #e74c3c; }
+    .recent-tx-amount { text-align: right; flex-shrink: 0; }
+    .recent-tx-amount .value { font-size: 14px; font-weight: 600; }
+    .recent-tx-amount .value.credit { color: #2ecc71; }
+    .recent-tx-amount .value.debit { color: #e74c3c; }
+    .recent-tx-amount .value.pending { color: #f39c12; }
+    .recent-tx-amount .time { font-size: 11px; color: var(--slate); margin-top: 2px; }
+
     .tx-glass-empty {
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       padding: 48px 20px; color: var(--slate); text-align: center;
@@ -777,30 +822,26 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
           Transfer
         </a>
-        <!-- <a href="transfer.html" class="nav-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
-          Transfer
-        </a> -->
         <a href="transaction.html" class="nav-item">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
           Transaction
         </a>
-        <button class="nav-item" onclick="showToast('Card page coming soon')">
+        <!-- <button class="nav-item" onclick="showToast('Card page coming soon')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
           Card
         </button>
         <button class="nav-item" onclick="showToast('Analytics page coming soon')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
           Analytics
-        </button>
+        </button> -->
         <a href="setting.html" class="nav-item">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
           Settings
         </a>
-        <button class="nav-item" onclick="showToast('Account page coming soon')">
+        <!-- <button class="nav-item" onclick="showToast('Account page coming soon')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           User Account
-        </button>
+        </button> -->
       </div>
 
       <div class="sidebar-footer">
@@ -907,7 +948,7 @@
                 <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
                 <div class="stat-label">Pending Balance</div>
               </div>
-              <div class="stat-value"><span class="grad" id="pendingBalance">$0.00</span></div>
+              <div class="stat-value"><span class="warning" id="pendingBalance">$0.00</span></div>
             </div>
           </div>
         </div>
@@ -918,17 +959,17 @@
             <div class="quick-btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></div>
             Transfer
           </button>
-          <button class="quick-btn" onclick="showToast('Pay bills coming soon')">
+          <button class="quick-btn" onclick="window.location.href='pay-bills.html'">
             <div class="quick-btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div>
             Pay Bills
           </button>
-          <button class="quick-btn" onclick="showToast('Top up coming soon')">
+          <button class="quick-btn" onclick="window.location.href='top-up.html'">
             <div class="quick-btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
             Top Up
           </button>
-          <button class="quick-btn" onclick="showToast('Transaction history coming soon')">
+          <button class="quick-btn" onclick="window.location.href='transaction.html'">
             <div class="quick-btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M12 2v2"/><path d="M12 20v2"/></svg></div>
-            Transaction History
+            History
           </button>
         </div>
 
@@ -971,7 +1012,7 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
               Recent Transactions
             </div>
-            <a href="#" class="tx-glass-action" onclick="event.preventDefault(); showToast('All transactions coming soon')">See All <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></a>
+            <a href="transaction.html" class="tx-glass-action">See All <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></a>
           </div>
           <div class="tx-skeleton" id="txSkeleton">
             <div class="tx-skeleton-row">
@@ -996,6 +1037,7 @@
               </div>
             </div>
           </div>
+          <div id="txRecentList"></div>
           <div class="tx-glass-empty" id="txGlassEmpty" style="display:none;">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><line x1="7" y1="15" x2="7.01" y2="15"/><line x1="11" y1="15" x2="13" y2="15"/></svg>
             <p>No transactions yet</p>
@@ -1086,10 +1128,6 @@
     async function loadProfile() {
       const data = await apiGet('/user/viewProfile');
       if (data) {
-        console.log('=== VIEW PROFILE DATA ===');
-        console.log(JSON.stringify(data, null, 2));
-        console.log('=========================');
-        
         const userArr = data.data || data.user || data;
         const user = Array.isArray(userArr) ? userArr[0] : userArr;
         if (!user) return;
@@ -1128,7 +1166,6 @@
         const arr = data.data || data.notifications || [];
         notifications = Array.isArray(arr) ? arr : [];
         renderNotifications();
-        // Removed automatic toast of latest notification — it was firing on every refresh
       }
     }
 
@@ -1150,7 +1187,6 @@
       badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
       badge.style.display = unreadCount > 0 ? 'grid' : 'none';
 
-      // Sort by createdAt descending (newest first), then take top 25
       const sorted = [...notifications].sort((a, b) => 
         new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
       ).slice(0, 25);
@@ -1183,7 +1219,6 @@
       const n = notifications.find(x => (x._id || x.id) === id);
       if (!n) return;
       
-      // Mark as read persistently
       if (!isRead(n)) {
         readNotifs.add(id);
         saveReadNotifs(readNotifs);
@@ -1214,7 +1249,6 @@
       showToast('All notifications marked as read', 'success');
     }
 
-    // Close dropdown when clicking outside
     document.addEventListener('click', (e) => {
       if (!e.target.closest('#notifBtn')) {
         document.getElementById('notifDropdown').classList.remove('show');
@@ -1309,10 +1343,85 @@
     }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
     document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
+    // ===== RECENT TRANSACTIONS =====
+    function getTxType(t) {
+      const raw = String(t.type || t.transactionType || '').toLowerCase();
+      if (raw.includes('credit') || raw.includes('deposit') || raw.includes('receive')) return 'credit';
+      if (raw.includes('pending') || raw.includes('processing')) return 'pending';
+      return 'debit';
+    }
+
+    function getTxStatus(t) {
+      const raw = String(t.status || '').toLowerCase();
+      if (raw.includes('complete') || raw.includes('success')) return 'completed';
+      if (raw.includes('pending') || raw.includes('process')) return 'pending';
+      if (raw.includes('fail') || raw.includes('decline')) return 'failed';
+      return 'completed';
+    }
+
+    function fmtTx(n) {
+      return '$' + parseFloat(n || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    }
+
+    async function loadRecentTransactions() {
+      try {
+        const res = await fetch(API_BASE + '/user/transactionHistory', {
+          headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' }
+        });
+        const data = await res.json();
+        let txs = [];
+        if (data.data && Array.isArray(data.data)) txs = data.data;
+        else if (Array.isArray(data)) txs = data;
+
+        document.getElementById('txSkeleton').style.display = 'none';
+
+        if (!txs.length) {
+          document.getElementById('txGlassEmpty').style.display = 'flex';
+          return;
+        }
+
+        txs.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+        const recent = txs.slice(0, 5);
+
+        const html = recent.map(t => {
+          const type = getTxType(t);
+          const status = getTxStatus(t);
+          const amount = parseFloat(t.amount || t.amountSent || 0);
+          const sign = type === 'credit' ? '+' : type === 'pending' ? '' : '-';
+          const title = t.title || t.description || (t.transactionType === 'withdrawal' ? 'Withdrawal' : 'Transfer');
+          const meta = t.recipient || t.sender || t.to || t.from || t.bankName || t.userId || 'Apex Capital';
+          const time = new Date(t.createdAt || Date.now()).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+          const icon = type === 'credit' ? '↓' : type === 'pending' ? '◷' : '↑';
+
+          return `<div class="recent-tx-row" onclick="window.location.href='transaction.html'">
+            <div class="recent-tx-icon ${type}">${icon}</div>
+            <div class="recent-tx-details">
+              <div class="recent-tx-title">${escapeHtml(title)}</div>
+              <div class="recent-tx-meta">
+                <span>${escapeHtml(meta)}</span>
+                <span class="recent-tx-status ${status}">${status}</span>
+              </div>
+            </div>
+            <div class="recent-tx-amount">
+              <div class="value ${type}">${sign}${fmtTx(amount).replace('$','')}</div>
+              <div class="time">${time}</div>
+            </div>
+          </div>`;
+        }).join('');
+
+        document.getElementById('txRecentList').innerHTML = html;
+      } catch (err) {
+        console.error('[Recent TX]', err);
+        document.getElementById('txSkeleton').style.display = 'none';
+        document.getElementById('txGlassEmpty').style.display = 'flex';
+      }
+    }
+
     // Init API calls
     document.addEventListener('DOMContentLoaded', () => {
       loadProfile();
       loadNotifications();
+      loadRecentTransactions();
     });
   </script>
 </body>

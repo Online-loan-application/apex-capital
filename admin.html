@@ -888,10 +888,10 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
           Users
         </a>
-        <button class="nav-item" onclick="setActive(this); showSection('transactions')">
+        <!-- <button class="nav-item" onclick="setActive(this); showSection('transactions')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
           Transactions
-        </button>
+        </button> -->
         <button class="nav-item" onclick="setActive(this); showSection('withdrawals')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
           Pending Withdrawals
@@ -900,10 +900,10 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
           Commissions
         </button>
-        <button class="nav-item" onclick="setActive(this); showSection('settings')">
+        <!-- <button class="nav-item" onclick="setActive(this); showSection('settings')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
           Settings
-        </button>
+        </button> -->
       </div>
 
       <div class="sidebar-footer">
@@ -1053,7 +1053,6 @@
 
           <!-- Pending Withdrawals Panel -->
           <div class="panel" id="kycPanel">
-            <!-- Panel Loader -->
             <div class="panel-loader show" id="kycPanelLoader">
               <div class="mini-orbital">
                 <div class="mini-ring mini-ring-1"></div>
@@ -1068,17 +1067,17 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
                 Pending Withdrawals
               </div>
-              <button class="panel-action" onclick="showToast('View all withdrawals coming soon')">View All <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>
+            </div>
+            <div class="filter-bar" style="margin-bottom:12px;">
+              <input type="text" class="filter-input" id="withdrawalSearch" placeholder="Search by email..." oninput="filterWithdrawals()">
             </div>
             <div id="kycList">
               <div style="text-align:center;padding:32px;color:var(--slate);font-size:13px;">Loading users...</div>
             </div>
           </div>
-        </div>
 
         <!-- Commissions Panel -->
         <div class="panel" id="commissionsPanel" style="margin-bottom:20px;">
-          <!-- Panel Loader -->
           <div class="panel-loader show" id="commissionsPanelLoader">
             <div class="mini-orbital">
               <div class="mini-ring mini-ring-1"></div>
@@ -1093,7 +1092,9 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
               Commission Payouts
             </div>
-            <button class="panel-action" onclick="showToast('Process all payouts coming soon')">Process All <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>
+          </div>
+          <div class="filter-bar" style="margin-bottom:12px;">
+            <input type="text" class="filter-input" id="commissionSearch" placeholder="Search by email..." oninput="filterCommissions()">
           </div>
           <div id="commissionsList"></div>
         </div>
@@ -1136,6 +1137,8 @@
     let allUsers = [];
     let currentPage = 1;
     const perPage = 2;
+    let withdrawalSearchQuery = '';
+    let commissionSearchQuery = '';
 
     // Auth gate
     if (!token) {
@@ -1193,10 +1196,9 @@
 
     // Derive display status from API fields
     function getUserStatus(u) {
-      if (u.loanStatus === 'Locked') return 'locked';
-      if (u.status) return u.status.toLowerCase();
-      const balance = parseFloat(u.totalBalance || u.balance || 0);
-      if (balance > 0) return 'active';
+      // Use loanStatus directly if available
+      if (u.loanStatus) return u.loanStatus.toLowerCase().trim();
+      if (u.status) return u.status.toLowerCase().trim();
       return 'pending';
     }
 
@@ -1242,7 +1244,8 @@
           joined: u.createdAt || u.joined || new Date().toISOString(),
           balance: avail > 0 ? avail : (total > 0 ? total : parseFloat(u.balance || 0)),
           pendingBalance: parseFloat(u.pendingBalance || 0),
-          status: getUserStatus(u),
+          status: getUserStatus(u),                 // lowercase for CSS class
+          statusText: u.loanStatus || u.status || 'Pending', // original text for display
           raw: u
         };
       });
@@ -1272,78 +1275,81 @@
       document.querySelectorAll('.admin-stat-card').forEach(c => c.classList.remove('loading'));
     }
 
-    // Render Users Table (Desktop) — only 2 recent
-    function renderUsers(users, page = 1) {
-      const tbody = document.getElementById('usersTableBody');
-      const cards = document.getElementById('usersCards');
-      const start = (page - 1) * perPage;
-      const paginated = users.slice(start, start + perPage);
+// Render Users Table (Desktop) — most recent first
+function renderUsers(users, page = 1) {
+  const tbody = document.getElementById('usersTableBody');
+  const cards = document.getElementById('usersCards');
+  
+  // Sort by joined date descending (newest first)
+  const sorted = [...users].sort((a, b) => new Date(b.joined) - new Date(a.joined));
+  
+  const start = (page - 1) * perPage;
+  const paginated = sorted.slice(start, start + perPage);
 
-      if (paginated.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--slate);">No users found</td></tr>';
-        cards.innerHTML = '<div style="text-align:center;padding:32px;color:var(--slate);">No users found</div>';
-        document.getElementById('usersPagination').innerHTML = '';
-        return;
-      }
+  if (paginated.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--slate);">No users found</td></tr>';
+    cards.innerHTML = '<div style="text-align:center;padding:32px;color:var(--slate);">No users found</div>';
+    document.getElementById('usersPagination').innerHTML = '';
+    return;
+  }
 
-      // Desktop table rows
-      tbody.innerHTML = paginated.map(u => `
-        <tr>
-          <td>
-            <div class="user-cell">
-              <div class="user-avatar-sm">${u.name.split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase()}</div>
-              <div>
-                <div class="user-name-sm">${escapeHtml(u.name)}</div>
-                <div class="user-email-sm">${escapeHtml(u.email)}</div>
-              </div>
-            </div>
-          </td>
-          <td><span class="role-badge">${u.userId}</span></td>
-          <td>${new Date(u.joined).toLocaleDateString()}</td>
-          <td>$${u.balance.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
-          <td><span class="status-badge status-${u.status}">${u.status}</span></td>
-          <td><button class="table-action-btn" onclick="viewUser('${u.id}')">View</button></td>
-        </tr>
-      `).join('');
-
-      // Mobile cards
-      cards.innerHTML = paginated.map(u => `
-        <div class="user-card">
-          <div class="user-card-header">
-            <div class="user-avatar-sm" style="width:36px;height:36px;font-size:12px;">${u.name.split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase()}</div>
-            <div style="flex:1;min-width:0;">
-              <div class="user-name-sm" style="font-size:13px;">${escapeHtml(u.name)}</div>
-              <div class="user-email-sm">${escapeHtml(u.email)}</div>
-            </div>
-            <span class="status-badge status-${u.status}">${u.status}</span>
-          </div>
-          <div class="user-card-body">
-            <div>
-              <div class="user-card-field">User ID</div>
-              <div class="user-card-value">${u.userId}</div>
-            </div>
-            <div>
-              <div class="user-card-field">Balance</div>
-              <div class="user-card-value">$${u.balance.toLocaleString(undefined, {minimumFractionDigits: 2})}</div>
-            </div>
-            <div>
-              <div class="user-card-field">Joined</div>
-              <div class="user-card-value">${new Date(u.joined).toLocaleDateString()}</div>
-            </div>
-            <div>
-              <div class="user-card-field">Account</div>
-              <div class="user-card-value">${u.raw?.accountType || '—'}</div>
-            </div>
-          </div>
-          <div class="user-card-actions">
-            <button class="table-action-btn" onclick="viewUser('${u.id}')">View Details</button>
+  // Desktop table rows
+  tbody.innerHTML = paginated.map(u => `
+    <tr>
+      <td>
+        <div class="user-cell">
+          <div class="user-avatar-sm">${u.name.split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase()}</div>
+          <div>
+            <div class="user-name-sm">${escapeHtml(u.name)}</div>
+            <div class="user-email-sm">${escapeHtml(u.email)}</div>
           </div>
         </div>
-      `).join('');
+      </td>
+      <td><span class="role-badge">${u.userId}</span></td>
+      <td>${new Date(u.joined).toLocaleDateString()}</td>
+      <td>$${u.balance.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+      <td><span class="status-badge status-${u.status}">${escapeHtml(u.statusText)}</span></td>
+      <td><button class="table-action-btn" onclick="viewUser('${u.id}')">View</button></td>
+    </tr>
+  `).join('');
 
-      renderPagination(users.length, page);
-    }
+  // Mobile cards
+  cards.innerHTML = paginated.map(u => `
+    <div class="user-card">
+      <div class="user-card-header">
+        <div class="user-avatar-sm" style="width:36px;height:36px;font-size:12px;">${u.name.split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase()}</div>
+        <div style="flex:1;min-width:0;">
+          <div class="user-name-sm" style="font-size:13px;">${escapeHtml(u.name)}</div>
+          <div class="user-email-sm">${escapeHtml(u.email)}</div>
+        </div>
+        <span class="status-badge status-${u.status}">${escapeHtml(u.statusText)}</span>
+      </div>
+      <div class="user-card-body">
+        <div>
+          <div class="user-card-field">User ID</div>
+          <div class="user-card-value">${u.userId}</div>
+        </div>
+        <div>
+          <div class="user-card-field">Balance</div>
+          <div class="user-card-value">$${u.balance.toLocaleString(undefined, {minimumFractionDigits: 2})}</div>
+        </div>
+        <div>
+          <div class="user-card-field">Joined</div>
+          <div class="user-card-value">${new Date(u.joined).toLocaleDateString()}</div>
+        </div>
+        <div>
+          <div class="user-card-field">Account</div>
+          <div class="user-card-value">${u.raw?.accountType || '—'}</div>
+        </div>
+      </div>
+      <div class="user-card-actions">
+        <button class="table-action-btn" onclick="viewUser('${u.id}')">View Details</button>
+      </div>
+    </div>
+  `).join('');
 
+  renderPagination(users.length, page);
+}
     function escapeHtml(text) {
       const div = document.createElement('div');
       div.textContent = text;
@@ -1449,7 +1455,7 @@
         <div class="modal-detail-row"><span class="modal-detail-label">Balance</span><span class="modal-detail-value">$${user.balance.toLocaleString(undefined, {minimumFractionDigits: 2})}</span></div>
         <div class="modal-detail-row"><span class="modal-detail-label">Pending Balance</span><span class="modal-detail-value">$${(user.pendingBalance || 0).toLocaleString(undefined, {minimumFractionDigits: 2})}</span></div>
         <div class="modal-detail-row"><span class="modal-detail-label">Account Type</span><span class="modal-detail-value">${raw.accountType || '—'}</span></div>
-        <div class="modal-detail-row"><span class="modal-detail-label">Loan Status</span><span class="modal-detail-value"><span class="status-badge status-${user.status}">${raw.loanStatus || user.status}</span></span></div>
+        <div class="modal-detail-row"><span class="modal-detail-label">Loan Status</span><span class="modal-detail-value"><span class="status-badge status-${user.status}">${escapeHtml(raw.loanStatus || user.statusText)}</span></span></div>
         
         <div style="margin:14px 0 6px; font-size:11px; color:var(--slate); text-transform:uppercase; letter-spacing:1.2px; font-weight:600;">Approval Tracker</div>
         ${buildApprovalGrid(raw)}
@@ -1466,18 +1472,25 @@
       document.getElementById('userModal').classList.remove('show');
     }
 
-    // Render Pending Withdrawals
+    // Render Pending Withdrawals — 4 newest users only
     function renderPendingWithdrawals() {
       const container = document.getElementById('kycList');
       if (allUsers.length === 0) {
         container.innerHTML = '<div style="text-align:center;padding:32px;color:var(--slate);font-size:13px;">Loading users...</div>';
         return;
       }
-      const pending = allUsers.filter(u => u.pendingBalance > 0);
+
+      // Filter → Sort newest first → Take top 4
+      const pending = allUsers
+        .filter(u => u.pendingBalance > 0)
+        .sort((a, b) => new Date(b.joined) - new Date(a.joined))
+        .slice(0, 4);
+
       if (pending.length === 0) {
         container.innerHTML = '<div style="text-align:center;padding:32px;color:var(--slate);font-size:13px;">No pending withdrawals</div>';
         return;
       }
+
       container.innerHTML = pending.map(u => `
         <div class="kyc-item" onclick="viewUser('${u.id}')">
           <div class="kyc-avatar">${u.name.split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase()}</div>
@@ -1551,31 +1564,146 @@
     }
 
     // Section switching
-    function showSection(section) {
-      const panels = ['usersPanel', 'kycPanel', 'commissionsPanel'];
-      if (section === 'overview') {
-        panels.forEach(p => document.getElementById(p).style.display = 'block');
-        document.querySelector('.content-grid').style.display = 'grid';
-        document.querySelector('.admin-stats').style.display = 'grid';
-      } else if (section === 'users') {
-        panels.forEach(p => document.getElementById(p).style.display = 'none');
-        document.getElementById('usersPanel').style.display = 'block';
-        document.querySelector('.content-grid').style.display = 'block';
-        document.querySelector('.admin-stats').style.display = 'grid';
-      } else if (section === 'withdrawals') {
-        panels.forEach(p => document.getElementById(p).style.display = 'none');
-        document.getElementById('kycPanel').style.display = 'block';
-        document.querySelector('.content-grid').style.display = 'block';
-        document.querySelector('.admin-stats').style.display = 'none';
-      } else if (section === 'commissions') {
-        panels.forEach(p => document.getElementById(p).style.display = 'none');
-        document.getElementById('commissionsPanel').style.display = 'block';
-        document.querySelector('.content-grid').style.display = 'block';
-        document.querySelector('.admin-stats').style.display = 'none';
-      } else if (section === 'transactions' || section === 'settings') {
-        showToast(section + ' section coming soon');
+    // Section switching
+function showSection(section) {
+  const panels = ['usersPanel', 'kycPanel', 'commissionsPanel'];
+  if (section === 'overview') {
+    panels.forEach(p => document.getElementById(p).style.display = 'block');
+    document.querySelector('.content-grid').style.display = 'grid';
+    document.querySelector('.admin-stats').style.display = 'grid';
+  } else if (section === 'users') {
+    panels.forEach(p => document.getElementById(p).style.display = 'none');
+    document.getElementById('usersPanel').style.display = 'block';
+    document.querySelector('.content-grid').style.display = 'block';
+    document.querySelector('.admin-stats').style.display = 'grid';
+  } else if (section === 'withdrawals') {
+    panels.forEach(p => document.getElementById(p).style.display = 'none');
+    document.getElementById('kycPanel').style.display = 'block';
+    document.querySelector('.content-grid').style.display = 'block';
+    document.querySelector('.admin-stats').style.display = 'none';
+  } else if (section === 'commissions') {
+    panels.forEach(p => document.getElementById(p).style.display = 'none');
+    document.getElementById('commissionsPanel').style.display = 'block';
+    document.querySelector('.content-grid').style.display = 'block';
+    document.querySelector('.admin-stats').style.display = 'none';
+  } else if (section === 'transactions' || section === 'settings') {
+    showToast(section + ' section coming soon');
+  }
+}
+
+function filterWithdrawals() {
+  withdrawalSearchQuery = document.getElementById('withdrawalSearch').value.trim();
+  renderPendingWithdrawals();
+}
+
+function filterCommissions() {
+  commissionSearchQuery = document.getElementById('commissionSearch').value.trim();
+  renderCommissions();
+}
+
+// Render ALL Pending Withdrawals — pendingBalance > 0, newest first, email search
+function renderPendingWithdrawals() {
+  const container = document.getElementById('kycList');
+  if (allUsers.length === 0) {
+    container.innerHTML = '<div style="text-align:center;padding:32px;color:var(--slate);font-size:13px;">No pending withdrawals</div>';
+    hidePanelLoader('kycPanelLoader');
+    return;
+  }
+
+  let pending = allUsers
+    .filter(u => parseFloat(u.pendingBalance || 0) > 0)
+    .sort((a, b) => new Date(b.joined) - new Date(a.joined));
+
+  if (withdrawalSearchQuery) {
+    const q = withdrawalSearchQuery.toLowerCase();
+    pending = pending.filter(u => (u.email || '').toLowerCase().includes(q));
+  }
+
+  if (pending.length === 0) {
+    container.innerHTML = '<div style="text-align:center;padding:32px;color:var(--slate);font-size:13px;">No pending withdrawals found</div>';
+    hidePanelLoader('kycPanelLoader');
+    return;
+  }
+
+  container.innerHTML = pending.map(u => `
+    <div class="kyc-item" onclick="viewUser('${u.id}')">
+      <div class="kyc-avatar">${u.name.split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase()}</div>
+      <div class="kyc-info">
+        <div class="kyc-name">${escapeHtml(u.name)}</div>
+        <div class="kyc-meta">${escapeHtml(u.email)}</div>
+      </div>
+      <div class="kyc-status review">$${parseFloat(u.pendingBalance).toLocaleString(undefined, {minimumFractionDigits: 2})}</div>
+    </div>
+  `).join('');
+
+  hidePanelLoader('kycPanelLoader');
+}
+
+// Render ALL Paid Commissions — billingXamount > 0 AND approval = paid & approved, newest first, email search
+function renderCommissions() {
+  const container = document.getElementById('commissionsList');
+  
+  if (!allUsers || allUsers.length === 0) {
+    container.innerHTML = '<div style="text-align:center;padding:32px;color:var(--slate);font-size:13px;">No commission data available</div>';
+    hidePanelLoader('commissionsPanelLoader');
+    return;
+  }
+
+  let entries = [];
+  allUsers.forEach(u => {
+    const raw = u.raw || {};
+    const stages = [
+      { key: '1st Stage', billing: raw.billing1amount, approval: raw.firstApprovals },
+      { key: '2nd Stage', billing: raw.billing2amount, approval: raw.secondApprovals },
+      { key: '3rd Stage', billing: raw.billing3amount, approval: raw.thirdApprovals },
+      { key: '4th Stage', billing: raw.billing4amount, approval: raw.fourthApprovals },
+    ];
+    
+    stages.forEach(stage => {
+      const status = String(stage.approval || '').toLowerCase();
+      const amount = parseFloat(stage.billing || 0);
+      // Must be explicitly paid & approved AND amount > 0
+      if (status.includes('paid') && status.includes('approved') && amount > 0) {
+        entries.push({
+          name: u.name,
+          email: u.email,
+          stage: stage.key,
+          amount: amount,
+          date: raw.createdAt || u.joined
+        });
       }
-    }
+    });
+  });
+
+  // Most recent first
+  entries.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  if (commissionSearchQuery) {
+    const q = commissionSearchQuery.toLowerCase();
+    entries = entries.filter(e => (e.email || '').toLowerCase().includes(q));
+  }
+
+  if (entries.length === 0) {
+    container.innerHTML = '<div style="text-align:center;padding:32px;color:var(--slate);font-size:13px;">No paid commissions yet</div>';
+    hidePanelLoader('commissionsPanelLoader');
+    return;
+  }
+
+  container.innerHTML = entries.map(c => `
+    <div class="commission-card">
+      <div class="commission-header">
+        <div class="commission-name">${escapeHtml(c.name)} — ${c.stage}</div>
+        <div class="commission-amount">$${c.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</div>
+      </div>
+      <div class="commission-meta">
+        <span style="color:#2ecc71;font-weight:500;">&#10003; Paid & Approved</span>
+        <span>${new Date(c.date).toLocaleDateString()}</span>
+      </div>
+    </div>
+  `).join('');
+  
+  hidePanelLoader('commissionsPanelLoader');
+}
 
     // UI Helpers
     function toggleSidebar() {

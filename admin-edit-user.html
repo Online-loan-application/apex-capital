@@ -344,6 +344,18 @@
       transform: translateY(-2px);
       box-shadow: 0 8px 24px rgba(46,204,113,0.2);
     }
+    .btn-warn {
+      background: rgba(241,196,15,0.12);
+      border: 1px solid rgba(241,196,15,0.25);
+      color: #f1c40f;
+    }
+    .btn-warn:hover {
+      background: rgba(241,196,15,0.2);
+      border-color: rgba(241,196,15,0.4);
+      color: #f39c12;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(241,196,15,0.2);
+    }
     .btn-sm { padding: 6px 12px; font-size: 11px; border-radius: 8px; }
 
     /* ===== APPROVAL GRID ===== */
@@ -382,21 +394,65 @@
     .approval-cell .form-input { text-align: center; font-size: 12px; padding: 8px; }
 
     /* ===== SERIALS GRID ===== */
-    .serials-grid {
+      .serials-grid {
       display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; width: 100%;
+      }
+      .serial-box {
+        padding: 14px; border-radius: 14px;
+        background: linear-gradient(160deg, rgba(193,232,255,0.04), rgba(84,131,179,0.01));
+        border: 1px solid rgba(193,232,255,0.06);
+        transition: all 0.3s ease;
+      }
+      .serial-box:hover {
+        border-color: rgba(193,232,255,0.12);
+        transform: translateY(-2px);
+      }
+      .serial-box .detail-label { margin-bottom: 8px; display: block; }
+    .serial-status {
+    margin-top: 8px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 3px 8px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    width: fit-content;
+      }
+    .serial-status::before {
+      content: '';
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
     }
-    .serial-box {
-      padding: 14px; border-radius: 14px;
-      background: linear-gradient(160deg, rgba(193,232,255,0.04), rgba(84,131,179,0.01));
-      border: 1px solid rgba(193,232,255,0.06);
-      transition: all 0.3s ease;
+    .serial-status.approved {
+      background: rgba(46,204,113,0.1);
+      border: 1px solid rgba(46,204,113,0.2);
+      color: #2ecc71;
     }
-    .serial-box:hover {
-      border-color: rgba(193,232,255,0.12);
-      transform: translateY(-2px);
+    .serial-status.approved::before {
+      background: #2ecc71;
+      box-shadow: 0 0 6px #2ecc71;
     }
-    .serial-box .detail-label { margin-bottom: 8px; display: block; }
-
+    .serial-status.pending {
+      background: rgba(193,232,255,0.04);
+      border: 1px solid rgba(193,232,255,0.08);
+      color: var(--slate);
+    }
+    .serial-status.pending::before {
+      background: var(--slate);
+    }
+    .serial-status.unpaid {
+      background: rgba(231,76,60,0.08);
+      border: 1px solid rgba(231,76,60,0.15);
+      color: #e74c3c;
+    }
+    .serial-status.unpaid::before {
+      background: #e74c3c;
+      box-shadow: 0 0 6px rgba(231,76,60,0.4);
+    }
     /* ===== RAW DATA (JSON VIEWER) ===== */
     .raw-toolbar {
       display: flex; align-items: center; justify-content: space-between;
@@ -620,9 +676,6 @@
       .input-group { flex-wrap: wrap; }
     }
   </style>
-<base target="_blank">
-<base target="_blank">
-<base target="_blank">
 </head>
 <body>
 
@@ -784,6 +837,24 @@
           </div>
         </div>
 
+        <!-- Reset Approvals Panel -->
+        <div class="panel" id="resetApprovalsPanel">
+          <div class="panel-header">
+            <div class="panel-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+              Reset Approvals
+            </div>
+            <button class="btn btn-warn btn-sm" onclick="resetUserApprovals()">Reset Now</button>
+          </div>
+          <div style="padding-top:4px;">
+            <div class="detail-label" style="margin-bottom:8px;">Clears all user approval flags and resets verification stages.</div>
+            <div style="font-size:12px;color:var(--slate);line-height:1.6;">
+              This will reset TAC, BVC, CCC, and FSC approval statuses back to their initial pending state. The user will need to re-complete all verification stages.
+            </div>
+            <div id="resetApprovalsStatus" style="margin-top:10px;font-size:12px;display:none;"></div>
+          </div>
+        </div>
+
         <!-- Serials Panel -->
         <div class="panel" id="serialsPanel">
           <div class="panel-header">
@@ -795,20 +866,24 @@
           </div>
           <div class="serials-grid">
             <div class="serial-box">
-              <span class="detail-label">Serial 1</span>
+              <span class="detail-label">Serial 1 <span style="color:var(--slate);font-size:10px;">(TAC)</span></span>
               <input type="text" class="form-input" id="serial1" placeholder="Not generated" readonly>
+              <div class="serial-status" id="serialStatus1">Checking...</div>
             </div>
             <div class="serial-box">
-              <span class="detail-label">Serial 2</span>
+              <span class="detail-label">Serial 2 <span style="color:var(--slate);font-size:10px;">(BVC)</span></span>
               <input type="text" class="form-input" id="serial2" placeholder="Not generated" readonly>
+              <div class="serial-status" id="serialStatus2">Checking...</div>
             </div>
             <div class="serial-box">
-              <span class="detail-label">Serial 3</span>
+              <span class="detail-label">Serial 3 <span style="color:var(--slate);font-size:10px;">(CCC)</span></span>
               <input type="text" class="form-input" id="serial3" placeholder="Not generated" readonly>
+              <div class="serial-status" id="serialStatus3">Checking...</div>
             </div>
             <div class="serial-box">
-              <span class="detail-label">Serial 4</span>
+              <span class="detail-label">Serial 4 <span style="color:var(--slate);font-size:10px;">(FSC)</span></span>
               <input type="text" class="form-input" id="serial4" placeholder="Not generated" readonly>
+              <div class="serial-status" id="serialStatus4">Checking...</div>
             </div>
           </div>
         </div>
@@ -997,7 +1072,6 @@
     console.log(data)
     let users = [];
     
-    // Correct extraction: data.data[0] contains the users array
     if (data && Array.isArray(data.data) && data.data.length > 0) {
       users = Array.isArray(data.data[0]) ? data.data[0] : [];
     }
@@ -1022,6 +1096,35 @@
     });
   }
 
+  function getApprovalStatus(user, stageIndex) {
+    const keys = [
+      'firstApprovals',
+      'secondApprovals',
+      'thirdApprovals',
+      'fourthApprovals'
+    ];
+    const key = keys[stageIndex];
+    if (!key || !(key in user)) return 'pending';
+    
+    const v = String(user[key] || '').toLowerCase().trim();
+    
+    if (v.includes('approved')) return 'approved';
+    if (v === 'not paid') return 'pending';
+    // if (v.includes('rejected') || v.includes('failed') || v.includes('declined')) return 'unpaid';
+    // return 'pending';
+  }
+
+function renderSerialStatuses(u) {
+  const stages = ['TAC', 'BVC', 'CCC', 'FSC'];
+  for (let i = 0; i < 4; i++) {
+    const el = document.getElementById('serialStatus' + (i + 1));
+    if (!el) continue;
+    const status = getApprovalStatus(u, i);
+    const label = status === 'approved' ? 'Paid & Approved' : status === 'unpaid' ? 'Unpaid / Rejected' : 'Pending';
+    el.textContent = label;
+    el.className = 'serial-status ' + status;
+  }
+}
   function renderUser(u) {
     const name = u.fullname || u.name || 'Unknown';
     const email = u.email || 'no-email@apex.capital';
@@ -1043,11 +1146,13 @@
 
     const balance = parseFloat(u.availableBalance || 0);
     const pending = parseFloat(u.pendingBalance || 0);
-    const total = balance + pending;
+    const spent   = parseFloat(u.spentBalance || 0);
+    const total   = balance + pending;
 
     document.getElementById('financialDetails').innerHTML = `
       <div class="detail-row"><span class="detail-label">Total Balance</span><span class="detail-value">$${balance.toLocaleString(undefined, {minimumFractionDigits: 2})}</span></div>
       <div class="detail-row"><span class="detail-label">Pending Balance</span><span class="detail-value">$${pending.toLocaleString(undefined, {minimumFractionDigits: 2})}</span></div>
+      <div class="detail-row"><span class="detail-label">Sent Balance</span><span class="detail-value">$${spent.toLocaleString(undefined, {minimumFractionDigits: 2})}</span></div>
       <div class="detail-row"><span class="detail-label">Combined Total</span><span class="detail-value">$${total.toLocaleString(undefined, {minimumFractionDigits: 2})}</span></div>
       <div class="detail-row"><span class="detail-label">Account Type</span><span class="detail-value">${u.accountType || '—'}</span></div>
     `;
@@ -1060,11 +1165,9 @@
       <div class="detail-row"><span class="detail-label">Database ID</span><span class="detail-value" style="font-size:10px;color:var(--slate);">${u.userId || '—'}</span></div>
     `;
 
-    // Try to populate from user object first, then fetch from API
     populateSerialInputs(u.serials || u.generatedSerials);
-    loadSerials(); // Fetch from dedicated endpoint
+    loadSerials();
 
-    // Render billing amounts
     const b1 = parseFloat(u.billing1amount || 0);
     const b2 = parseFloat(u.billing2amount || 0);
     const b3 = parseFloat(u.billing3amount || 0);
@@ -1094,6 +1197,7 @@
 
     currentRawJson = JSON.stringify(u, null, 2);
     document.getElementById('rawData').innerHTML = syntaxHighlightJson(u);
+    renderSerialStatuses(u);
   }
 
   function copyRawJson() {
@@ -1166,7 +1270,6 @@
       showToast('Billing amount saved', 'success');
       document.getElementById('setBillingInput').value = '';
 
-      // Refresh user data to show updated billing amounts
       setTimeout(() => loadUser(), 800);
 
     } catch (err) {
@@ -1176,6 +1279,50 @@
       statusEl.style.color = '#e74c3c';
       statusEl.style.display = 'block';
       showToast('Failed to save billing amount', 'error');
+    }
+  }
+
+  async function resetUserApprovals() {
+    if (!currentUserId) {
+      showToast('No user loaded', 'error');
+      return;
+    }
+    if (!confirm('Are you sure you want to reset all approval flags for this user? This will clear TAC, BVC, CCC, and FSC statuses.')) return;
+
+    const statusEl = document.getElementById('resetApprovalsStatus');
+    showLoader('Resetting Approvals...', 'Clearing verification stages');
+
+    try {
+      const res = await fetch(API_BASE + '/admin/resetUserApprovals', {
+        method: 'PUT',
+        headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: currentUserId })
+      });
+
+      const data = await res.json();
+      console.log('[ResetApprovals] Response status:', res.status, res.statusText);
+      console.log('[ResetApprovals] Response data:', data);
+
+      hideLoader();
+
+      if (!res.ok) {
+        throw new Error(data.message || 'HTTP ' + res.status);
+      }
+
+      statusEl.textContent = 'Approvals reset successfully!';
+      statusEl.style.color = '#2ecc71';
+      statusEl.style.display = 'block';
+      showToast('User approvals reset', 'success');
+
+      setTimeout(() => loadUser(), 800);
+
+    } catch (err) {
+      hideLoader();
+      console.error('[ResetApprovals] Error:', err);
+      statusEl.textContent = err.message || 'Failed to reset approvals';
+      statusEl.style.color = '#e74c3c';
+      statusEl.style.display = 'block';
+      showToast('Failed to reset approvals', 'error');
     }
   }
 
@@ -1195,10 +1342,8 @@
         throw new Error(data.message || 'HTTP ' + res.status);
       }
 
-      // Extract serials from various possible response shapes
       let serials = null;
       if (data.serials && Array.isArray(data.serials)) {
-        // data.serials might be [Array(4), notificationObject]
         serials = Array.isArray(data.serials[0]) ? data.serials[0] : data.serials;
       } else if (data.data && Array.isArray(data.data)) {
         serials = Array.isArray(data.data[0]) ? data.data[0] : data.data;
@@ -1228,7 +1373,6 @@
       if (data.serials && Array.isArray(data.serials)) {
         populateSerialInputs(data.serials);
       }
-      // Refresh from GET endpoint too
       setTimeout(() => loadSerials(), 500);
     } else {
       showToast('Failed to generate serials', 'error');

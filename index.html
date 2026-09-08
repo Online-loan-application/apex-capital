@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Apex Capital — Online Banking</title>
   <script>
     (function() {
@@ -204,7 +204,7 @@
     .nav-links a:hover::after { width: 100%; }
     .nav-cta { padding: 10px 24px; background: linear-gradient(135deg, var(--slate), var(--sky)); color: var(--deep); border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.25s; font-family: inherit; }
     .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(84,131,179,0.45); }
-    .mobile-menu-btn { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
+    .mobile-menu-btn { display: none; flex-direction: column; justify-content: center; align-items: center; gap: 5px; background: none; border: none; cursor: pointer; padding: 8px; min-width: 44px; min-height: 44px; -webkit-tap-highlight-color: transparent; }
     .mobile-menu-btn span { display: block; width: 24px; height: 2px; background: var(--ice); border-radius: 2px; transition: all 0.3s; }
 
     /* Hero */
@@ -334,6 +334,69 @@
     .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
     .reveal.active { opacity: 1; transform: translateY(0); }
 
+    /* Mobile Menu Overlay */
+    .mobile-menu {
+      position: fixed; inset: 0; z-index: 200;
+      visibility: hidden; transition: visibility 0s 0.4s;
+    }
+    .mobile-menu.open {
+      visibility: visible; transition: visibility 0s;
+    }
+    .mobile-menu-backdrop {
+      position: absolute; inset: 0;
+      background: rgba(2,16,36,0.7); backdrop-filter: blur(12px);
+      opacity: 0; transition: opacity 0.4s ease;
+    }
+    .mobile-menu.open .mobile-menu-backdrop { opacity: 1; }
+    .mobile-menu-panel {
+      position: absolute; top: 0; right: 0;
+      width: min(85vw, 320px); height: 100%; height: 100dvh;
+      background: linear-gradient(180deg, var(--deep) 0%, var(--navy) 100%);
+      border-left: 1px solid rgba(193,232,255,0.12);
+      box-shadow: -20px 0 60px rgba(2,16,36,0.6);
+      transform: translateX(100%);
+      transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex; flex-direction: column; padding: 24px;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+    .mobile-menu.open .mobile-menu-panel { transform: translateX(0); }
+    .mobile-menu-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 40px; padding-bottom: 16px;
+      border-bottom: 1px solid rgba(193,232,255,0.08);
+      flex-shrink: 0;
+    }
+    .mobile-menu-close {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: rgba(193,232,255,0.06); border: 1px solid rgba(193,232,255,0.12);
+      color: var(--ice); display: grid; place-items: center;
+      cursor: pointer; transition: all 0.25s;
+      flex-shrink: 0;
+    }
+    .mobile-menu-close:hover { background: rgba(193,232,255,0.12); transform: rotate(90deg); }
+    .mobile-menu-links { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+    .mobile-menu-links li a {
+      display: flex; align-items: center;
+      min-height: 52px; padding: 12px 16px;
+      border-radius: 14px;
+      font-size: 17px; font-weight: 500; color: var(--sky);
+      text-decoration: none; transition: all 0.25s;
+    }
+    .mobile-menu-links li a:hover { background: rgba(193,232,255,0.08); color: var(--ice); }
+    .mobile-link-cta {
+      margin-top: 8px;
+      background: linear-gradient(135deg, var(--slate), var(--sky)) !important;
+      color: var(--deep) !important; font-weight: 600 !important;
+      justify-content: center;
+    }
+    .mobile-link-cta:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(84,131,179,0.4); }
+    .mobile-menu-footer { margin-top: auto; padding-top: 24px; border-top: 1px solid rgba(193,232,255,0.08); flex-shrink: 0; }
+    .mobile-menu-footer p { font-size: 13px; color: var(--slate); line-height: 1.6; }
+    .mobile-menu-btn.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .mobile-menu-btn.open span:nth-child(2) { opacity: 0; }
+    .mobile-menu-btn.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
     /* Responsive */
     @media (max-width: 1024px) {
       .hero-grid { grid-template-columns: 1fr; gap: 60px; } .hero-visual { order: -1; } .hero-card { width: 100%; max-width: 340px; }
@@ -341,14 +404,33 @@
       .steps { grid-template-columns: 1fr; } .step-connector { display: none; } .footer-inner { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 768px) {
-      .hero { padding: 120px 24px 80px; } .hero h1 { font-size: 48px; } .nav-links { display: none; } .mobile-menu-btn { display: flex; }
+      nav { padding: 16px 20px; }
+      .hero { padding: 110px 20px 60px; min-height: auto; } 
+      .hero h1 { font-size: 42px; letter-spacing: -1px; } 
+      .hero-desc { font-size: 16px; }
+      .nav-links { display: none; } 
+      .mobile-menu-btn { display: flex; }
       .stats-inner, .feature-grid, .testimonial-grid { grid-template-columns: 1fr; }
-      .features, .how-it-works, .testimonials, .cta-section { padding: 80px 24px; } .section-header h2 { font-size: 34px; }
-      .cta-box { padding: 48px 24px; } .cta-box h2 { font-size: 32px; } .footer-inner { grid-template-columns: 1fr; gap: 32px; }
-      .footer-bottom { flex-direction: column; gap: 16px; text-align: center; } .step { padding: 36px 24px; }
+      .features, .how-it-works, .testimonials, .cta-section { padding: 80px 20px; } 
+      .section-header h2 { font-size: 32px; }
+      .cta-box { padding: 48px 24px; } 
+      .cta-box h2 { font-size: 30px; } 
+      .footer-inner { grid-template-columns: 1fr; gap: 32px; }
+      .footer-bottom { flex-direction: column; gap: 16px; text-align: center; } 
+      .step { padding: 36px 24px; }
+      .float-el-1 { right: 0; top: -20px; }
+      .float-el-2 { left: 0; bottom: 10px; }
     }
     @media (max-width: 480px) {
-      .hero h1 { font-size: 38px; } .stat-num { font-size: 32px; } .hero-actions { flex-direction: column; } .btn { width: 100%; justify-content: center; }
+      .hero { padding: 100px 16px 50px; }
+      .hero h1 { font-size: 34px; } 
+      .stat-num { font-size: 32px; } 
+      .hero-actions { flex-direction: column; } 
+      .btn { width: 100%; justify-content: center; }
+      .hero-card { padding: 24px; border-radius: 20px; }
+      .hero-card-balance { font-size: 28px; }
+      .mobile-menu-panel { width: 100%; max-width: none; border-left: none; }
+      .features, .how-it-works, .testimonials, .cta-section { padding: 60px 16px; }
     }
   </style>
 </head>
@@ -385,8 +467,40 @@
         <li><a href="#testimonials">Reviews</a></li>
         <li><button class="nav-cta" onclick="window.location.href='auth.html#login'">Login</button></li>
       </ul>
-      <button class="mobile-menu-btn" onclick="showToast('Mobile menu coming soon')"><span></span><span></span><span></span></button>
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
     </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu" id="mobileMenu">
+      <div class="mobile-menu-backdrop" id="mobileMenuBackdrop"></div>
+      <div class="mobile-menu-panel">
+        <div class="mobile-menu-header">
+          <a href="index.html" class="logo" style="font-size:18px;">
+            <div class="logo-orbital">
+              <div class="logo-ring logo-ring-outer"></div>
+              <div class="logo-ring logo-ring-mid"></div>
+              <div class="logo-ring logo-ring-inner"></div>
+              <div class="logo-core"></div>
+            </div>
+            <span>Apex <b>Capital</b></span>
+          </a>
+          <button class="mobile-menu-close" id="mobileMenuClose" aria-label="Close menu">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <ul class="mobile-menu-links">
+          <li><a href="#features" class="mobile-link">Features</a></li>
+          <li><a href="#how" class="mobile-link">How it works</a></li>
+          <li><a href="#testimonials" class="mobile-link">Reviews</a></li>
+          <li><a href="auth.html#login" class="mobile-link mobile-link-cta">Login</a></li>
+        </ul>
+        <div class="mobile-menu-footer">
+          <p>Secure banking for the modern world.</p>
+        </div>
+      </div>
+    </div>
 
     <section class="hero">
       <div class="hero-bg-glow hero-bg-glow-1"></div>
@@ -658,6 +772,30 @@
         toast.style.color = '';
       }, 3000);
     }
+
+    // Mobile menu toggle
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileMenuClose = document.getElementById('mobileMenuClose');
+    const mobileMenuBackdrop = document.getElementById('mobileMenuBackdrop');
+    const mobileLinks = document.querySelectorAll('.mobile-link');
+
+    function openMobileMenu() {
+      mobileMenu.classList.add('open');
+      mobileMenuBtn.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeMobileMenu() {
+      mobileMenu.classList.remove('open');
+      mobileMenuBtn.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    mobileMenuBtn.addEventListener('click', openMobileMenu);
+    mobileMenuClose.addEventListener('click', closeMobileMenu);
+    mobileMenuBackdrop.addEventListener('click', closeMobileMenu);
+    mobileLinks.forEach(link => link.addEventListener('click', closeMobileMenu));
   </script>
 </body>
 </html>
