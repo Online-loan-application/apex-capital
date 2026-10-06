@@ -851,6 +851,7 @@
         console.log('[Transactions] Response status:', res.status, res.statusText);
         const data = await res.json();
         console.log('[Transactions] Raw response:', data.data[0]);
+        console.log(data)
 
         if (!res.ok) {
           throw new Error(data.message || 'HTTP ' + res.status);
@@ -888,11 +889,11 @@
     function computeSummary() {
       let expense = 0, pending = 0;
       allTransactions.forEach(t => {
-        const amt = parseFloat(t.amount || t.amountSent || 0); // <-- added amountSent
-        const type = String(t.type || t.transactionType || '').toLowerCase();
-        const status = String(t.status || '').toLowerCase();
-        if (status === 'pending') pending += amt;
-        else if (type === 'debit' || type === 'sent' || type === 'transfer' || type === 'withdrawal') expense += amt; // <-- added withdrawal
+        const amt = getTxAmount(t);
+        if (amt <= 0) return; // skip zero-amount records
+        const type = getTxType(t);
+        if (type === 'pending') pending += amt;
+        else if (type === 'debit') expense += amt;
       });
       document.getElementById('totalExpense').textContent = fmt(expense);
       document.getElementById('totalPending').textContent = fmt(pending);
@@ -902,14 +903,21 @@
       return '$' + parseFloat(n || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
     }
 
+    // ↓↓↓ THIS WAS MISSING — add it ↓↓↓
+    function getTxAmount(t) {
+      return parseFloat(t.amount || t.amountSent || t.amountReceived || 0);
+    }
     function getTxType(t) {
       const raw = String(t.type || t.transactionType || '').toLowerCase();
-      if (raw.includes('credit') || raw.includes('deposit') || raw.includes('receive')) return 'credit';
-      if (raw.includes('pending') || raw.includes('processing')) return 'pending';
-      if (raw.includes('withdrawal')) return 'debit'; // <-- explicit
+      const status = String(t.status || '').toLowerCase();
+
+      // Status wins: a pending withdrawal belongs under "Pending", not "Sent"
+      if (status.includes('pending') || status.includes('process')) return 'pending';
+
+      if (raw.includes('credit') || raw.includes('deposit') || raw.includes('receive') || raw.includes('available_balance')) return 'credit';
+      if (raw.includes('withdrawal') || raw.includes('debit') || raw.includes('sent') || raw.includes('transfer')) return 'debit';
       return 'debit';
     }
-
     function getTxStatus(t) {
       const raw = String(t.status || '').toLowerCase();
       if (raw.includes('complete') || raw.includes('success')) return 'completed';
@@ -944,14 +952,16 @@
       const container = document.getElementById('txList');
       const search = document.getElementById('txSearch').value.toLowerCase().trim();
       let filtered = allTransactions.filter(t => {
+        if (getTxAmount(t) <= 0) return false;              // hide $0 records
         const type = getTxType(t);
         if (currentFilter !== 'all' && type !== currentFilter) return false;
         if (search) {
-          const hay = `${t.title || t.description || ''} ${t.recipient || t.sender || t.to || ''} ${t.amount || ''}`.toLowerCase();
+          const hay = `${t.title || t.description || ''} ${t.recipient || t.sender || t.to || ''} ${getTxAmount(t)}`.toLowerCase();
           return hay.includes(search);
         }
         return true;
       });
+  // ... rest stays the same
       filtered.sort((a, b) => new Date(b.createdAt || b.date || 0) - new Date(a.createdAt || a.date || 0));
       document.getElementById('txCount').textContent = filtered.length + ' transaction' + (filtered.length !== 1 ? 's' : '');
       if (!filtered.length) {
@@ -965,14 +975,14 @@
         html += items.map(t => {
           const type = getTxType(t);
           const status = getTxStatus(t);
-          const amount = parseFloat(t.amount || t.amountSent || 0); // <-- added amountSent
-          const sign = type === 'credit' ? '+' : type === 'pending' ? '' : '-';
+          const amount = getTxAmount(t);
+          const sign = type === 'credit' ? '' : type === 'pending' ? '' : '-';
 
           // Smarter title detection
           let title = t.title || t.description;
           if (!title) {
-            if (type === 'credit') title = 'Received Funds';
-            else if (t.transactionType === 'withdrawal') title = 'Withdrawal';
+            if (type === 'credit') title = 'Deposit Received';
+            else if (type === 'pending') title = 'Withdrawal (Pending)';
             else title = 'Transfer Sent';
           }
 
